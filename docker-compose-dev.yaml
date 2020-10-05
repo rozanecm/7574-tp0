@@ -11,6 +11,8 @@ services:
       - SERVER_LISTEN_BACKLOG=5
     networks:
       - testing_net
+    volumes:
+      - ./cfg:/var/cfg
 
   client1:
     container_name: client1
@@ -25,6 +27,8 @@ services:
       - testing_net
     depends_on:
       - server
+    volumes:
+      - ./cfg:/var/cfg
 
 networks:
   testing_net:

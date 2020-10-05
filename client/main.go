@@ -1,19 +1,31 @@
 package main
 
 import (
+	"github.com/7574-sistemas-distribuidos/docker-compose-init/client/common"
 	"log"
 	"time"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
-
-	"github.com/7574-sistemas-distribuidos/docker-compose-init/client/common"
 )
 
 // InitConfig Function that uses viper library to parse env variables. If
 // some of the variables cannot be parsed, an error is returned
 func InitConfig() (*viper.Viper, error) {
 	v := viper.New()
+
+	v.AddConfigPath("/var/cfg/")
+	v.SetConfigName("client.json")
+	v.SetConfigType("json")
+
+	if err := v.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+			// Config file was found but another error was produced
+			log.Fatalf("Error reading config file: %s", err)
+		}
+		log.Printf("Could not found config file. Using only env variables")
+	}
+
 
 	// Configure viper to read env variables with the CLI_ prefix
 	v.AutomaticEnv()
