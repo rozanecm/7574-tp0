@@ -34,6 +34,6 @@ docker-compose-logs:
 .PHONY: docker-compose-logs
 
 net-test:
-	sudo docker run -it --network=7574-tp0_testing_net busybox
+	echo 1 | sudo docker run -i --network=7574-tp0_testing_net busybox nc server 12345
 .PHONY: net-test
 
