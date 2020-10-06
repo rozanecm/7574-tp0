@@ -34,7 +34,6 @@ docker-compose-logs:
 .PHONY: docker-compose-logs
 
 net-test:
-#	echo 1 | sudo docker run -i --network=7574-tp0_testing_net busybox nc server 12345
-	diff <(echo 1 | sudo docker run -i --network=7574-tp0_testing_net busybox nc server 12345) <(echo "Your Message has been received: b'1'")
+	./my_diff.sh
 .PHONY: net-test
 
