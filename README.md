@@ -44,6 +44,12 @@ Notar que se especifica mediante el flag `--network` a qué red se quiere la ima
 
 Hasta aquí está armado el comando para verificar el funcionamiento del server, pero todavía hay que chequear a mano si la respuesta recibida es correcta. Para ello se realizó un script en bash que toma la salida de este comando y la compara con la salida esperada, que es conocida porque es también conocido el mensaje que se está enviando. Si la salida es la esperada, se imprime en pantalla `passed.`, de lo contrario se imprime `failed.`.
 
+Todo esto queda encapsulado en el archivo `my_diff.sh`, sin embargo, como todos los comandos se encuentran centralizados en el Makefile, se ha agregado una entrada en el mismo con el comando `net-test` que corre dicho archivo. De esta forma, para ejecutar este punto, solamente hay que correr
+```
+make net-test
+```
+y verificar que el mensaje impreso sea `passed.`.
+
 
 ***
 
