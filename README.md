@@ -1,3 +1,52 @@
+# Resolución de los ejercicios
+## Notas generales
+A los comandos `docker` se los antepuso con `sudo`. Si bien [aquí](https://docs.docker.com/engine/install/linux-postinstall/) se explica por qué esto es necesario y cómo poder evitar la necesidad de prefijar con `sudo` los comandos de docker, a la hora de desarrollar el tp todavía no se había encontrado esta información y se prefirió cerrar la entrega con lo que está testeado que anda, para no romper algo a último momento.
+
+Cada ejercicio se ha resuelto en un branch de forma no incremental, es decir que para cada ejercicio se ha sacado branch nuevo a partir de master.
+## Ejercicio 1
+Trabajando en el archivo docker-compose-dev.yml:
+1. se ha duplicado el client1
+2. se le cambió el nombre a client2
+3. se le cambió la variable de entorno `CLI_ID` a 2
+Analisis:
+Está bien dejar los siguientes parámetros como estaban:
+1. **image**: porque todos los clientes se basan en una misma imagen. Se pide duplicar un cliente como el ya existente, no se pide que cumpla con otras funcionalidades.
+2. **entrypoint**: idem anterior
+3. **env vars**:
+    a. `CLI_LOOP_LAPSE` y `CLI_LOOP_PERIOD`: al ser usadas para indicar la frecuencia con que se envian msjs al server y durante cuanto tiempo se ejecutará el cliente, no tiene mucho sentido cambiar los valores, aunque de hacerlo, tampoco se rompería nada; simplemente se modificaría el comportamiento del cliente.
+    b. `CLI_SERVER_ADDRESS`: No se debe cambiar porque indica el puerto del server.
+Al ejecutar make docker-compose-up y revisar los logs mediante make docker-compose-logs, se pudo verificar que corren dos clientes en la consola, que se envían y reciben mensajes, y que ambos hacen exit de forma exitosa.
+
+## Ejercicio 2
+Hubo que agregar las siguientes líneas en el archivo docker-compose-dev.yaml, tanto para el  cliente como para el servidor:
+```
+    volumes:
+      - ./cfg:/var/cfg
+```
+En ambos casos, se intenta leer del archivo, y de no obtener éxito, se recae en la lectura de las variables de entorno.
+
+En el caso del servidor, el archivo no sigue ningún formato estándar, sino que está compuesto directamente por líneas con el formato:
+```
+clave=valor
+```
+Para el server, se lee el archivo por línea, y se hace split(‘=’), almacenando los valores en un diccionario.
+
+En el cliente se extendió el uso provisto de viper para que primero busque en un archivo, y de no encontrar archivo, pase a leer variables de entorno. El archivo usado en este caso es del tipo JSON.
+
+## Ejercicio 3
+La resolución de este punto se basa en la ejecución del comando netcat mediante docker run directamente. Al comando se le pasan los parámetros de conexión al servidor, de forma que al correr dicho comando, ya quede establecida la conexión y quede solamente enviar el mensaje de interés.
+
+Como la idea es testear el correcto funcionamiento de forma automática, también hay que lograr meterle input al comando para que se lo envíe al server. Se recurre para esto al pipe, quedando finalmente el comando completo:
+```bash
+echo 1 | sudo docker run -i --network=7574-tp0_testing_net busybox nc server 12345
+```
+Notar que se especifica mediante el flag `--network` a qué red se quiere la imagen levantada.
+
+Hasta aquí está armado el comando para verificar el funcionamiento del server, pero todavía hay que chequear a mano si la respuesta recibida es correcta. Para ello se realizó un script en bash que toma la salida de este comando y la compara con la salida esperada, que es conocida porque es también conocido el mensaje que se está enviando. Si la salida es la esperada, se imprime en pantalla `passed.`, de lo contrario se imprime `failed.`.
+
+
+***
+
 # Docker Compose Init
 El siguiente ejemplo es un cliente-servidor el cual corre en containers
 con la ayuda de [docker-compose](https://docs.docker.com/compose/). El presente
