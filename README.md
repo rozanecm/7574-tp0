@@ -13,8 +13,8 @@ Está bien dejar los siguientes parámetros como estaban:
 1. **image**: porque todos los clientes se basan en una misma imagen. Se pide duplicar un cliente como el ya existente, no se pide que cumpla con otras funcionalidades.
 2. **entrypoint**: idem anterior
 3. **env vars**:
-    a. `CLI_LOOP_LAPSE` y `CLI_LOOP_PERIOD`: al ser usadas para indicar la frecuencia con que se envian msjs al server y durante cuanto tiempo se ejecutará el cliente, no tiene mucho sentido cambiar los valores, aunque de hacerlo, tampoco se rompería nada; simplemente se modificaría el comportamiento del cliente.
-    b. `CLI_SERVER_ADDRESS`: No se debe cambiar porque indica el puerto del server.
+    1. `CLI_LOOP_LAPSE` y `CLI_LOOP_PERIOD`: al ser usadas para indicar la frecuencia con que se envian msjs al server y durante cuanto tiempo se ejecutará el cliente, no tiene mucho sentido cambiar los valores, aunque de hacerlo, tampoco se rompería nada; simplemente se modificaría el comportamiento del cliente.
+    2. `CLI_SERVER_ADDRESS`: No se debe cambiar porque indica el puerto del server.
 Al ejecutar make docker-compose-up y revisar los logs mediante make docker-compose-logs, se pudo verificar que corren dos clientes en la consola, que se envían y reciben mensajes, y que ambos hacen exit de forma exitosa.
 
 ## Ejercicio 2
@@ -44,7 +44,7 @@ Notar que se especifica mediante el flag `--network` a qué red se quiere la ima
 
 Hasta aquí está armado el comando para verificar el funcionamiento del server, pero todavía hay que chequear a mano si la respuesta recibida es correcta. Para ello se realizó un script en bash que toma la salida de este comando y la compara con la salida esperada, que es conocida porque es también conocido el mensaje que se está enviando. Si la salida es la esperada, se imprime en pantalla `passed.`, de lo contrario se imprime `failed.`.
 
-Todo esto queda encapsulado en el archivo `my_diff.sh`, sin embargo, como todos los comandos se encuentran centralizados en el Makefile, se ha agregado una entrada en el mismo con el comando `net-test` que corre dicho archivo. De esta forma, para ejecutar este punto, solamente hay que correr
+Todo esto queda encapsulado en el archivo `my_diff.sh`, sin embargo, como todos los comandos se encuentran centralizados en el Makefile, se ha agregado una entrada en el mismo con el comando `net-test` que corre dicho archivo. De esta forma, **para ejecutar este punto, solamente hay que correr**
 ```
 make net-test
 ```
